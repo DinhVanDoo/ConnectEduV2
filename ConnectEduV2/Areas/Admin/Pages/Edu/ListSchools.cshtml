@@ -1,0 +1,151 @@
+﻿@page
+@using ConnectEduV2.Models
+@model ConnectEduV2.Areas.Admin.Pages.Edu.ListSchoolsModel 
+@{
+    Layout = "~/Areas/Admin/Pages/Shared/_AdminLayout.cshtml";
+}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">List School </h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Dashboard v2</li>
+                    </ol>
+                </div><!-- /.col -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="searchKeyword" value="@Model.SearchKeyword" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <button class="btn btn-primary" onclick="searchUsers()">Search</button>
+                    </div>
+                </div>
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+        <script>
+            function searchUsers() {
+                var searchKeyword = $("#searchKeyword").val();
+                var url = "/Admin/Edu/ListSchools?searchKeyword=" + searchKeyword;
+                window.location.href = url;
+            }
+        </script>
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Simple Full Width Table</h3>
+
+                    <div class="card-tools">
+                        <ul class="pagination pagination-sm float-right">
+                            @if (Model.Schools != null || Model.Schools.PageNumber > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="~/Admin/Edu/ListSchools?pageNumber=@(Model.Schools.PageNumber - 1)@(string.IsNullOrEmpty(Model.SearchKeyword) ? "" : $"&searchKeyword={Model.SearchKeyword}")">&laquo;</a>
+                                </li>
+                            }
+                            @for (int i = 1; i <= Model.Schools.PageCount; i++)
+                            {
+                                <li class="page-item @(Model.Schools.PageNumber == i ? "active" : "")">
+                                    <a class="page-link" href="~/Admin/Edu/ListSchools?pageNumber=@i@(string.IsNullOrEmpty(Model.SearchKeyword) ? "" : $"&searchKeyword={Model.SearchKeyword}")">@i</a>
+                                </li>
+                            }
+                            @if (Model.Schools.PageNumber < Model.Schools.PageCount)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="~/Admin/Edu/ListSchools?pageNumber=@(Model.Schools.PageNumber + 1)@(string.IsNullOrEmpty(Model.SearchKeyword) ? "" : $"&searchKeyword={Model.SearchKeyword}")">&raquo;</a>
+                                </li>
+                            }
+                        </ul>
+
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body p-0">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 10px">#</th>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Image</th>
+                                <th>Data status</th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int index = 1;
+                            }
+                            @foreach (School list in Model.Schools)
+                            {
+
+                                <tr onclick="redirectToDepartment('@list.Name')">
+                                    <td>@(index++)</td>
+                                    <td>@list.Id</td>
+                                    <td>@list.Name</td>
+                                    <td>@list.Image</td>
+
+                                    <td>
+                                        <style>
+                                            .button {
+                                                background: none;
+                                                background-color: #28a745;
+                                                border: none;
+                                                padding: 5px;
+                                                margin: auto;
+                                                cursor: pointer;
+                                                border-radius: 6px;
+                                            }
+                                        </style>
+                                        @if (list.DataStatus?.Id == 2)
+                                        {
+                                            <form method="post" asp-page="/Admin/Edu/ListSchools" >
+                                                <input hidden name="pageNum" value="@Model.Schools.PageNumber" />
+                                                <button type="submit" class="button badge bg-danger" style="height:fit-content" name="id" value="@list.Id">
+                                                    @list.DataStatus?.Name
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <form method="post" asp-page="/Admin/Edu/ListSchools">
+                                                <input hidden name="pageNum" value="@Model.Schools.PageNumber" />
+                                                <button type="submit" class="button badge bg-success" name="id" style="height:fit-content;background-color: #28a745;" value="@list.Id">
+
+                                                    @list.DataStatus?.Name
+                                                </button>
+                                            </form>
+                                        }
+                                    </td>
+
+
+
+                                </tr>
+
+                            }
+
+                        </tbody>
+                        <script>
+                            function redirectToDepartment(departmentName) {
+                                var url = "/Admin/Edu/ListDepartments?searchKeyword=" + departmentName;
+                                window.location.href = url;
+                            }
+                        </script>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+            <!-- /.card -->
+        </div>
+
+    </div>
+</div>

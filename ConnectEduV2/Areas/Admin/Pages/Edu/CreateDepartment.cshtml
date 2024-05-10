@@ -1,0 +1,69 @@
+﻿@page
+@model ConnectEduV2.Areas.Admin.Pages.Edu.CreateDepartmentModel
+@{
+    Layout = "~/Areas/Admin/Pages/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+              
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- general form elements -->
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="card card-primary col-md-10">
+                <div class="card-header">
+                    <h3 class="card-title">Create Department</h3>
+                </div>
+                <!-- /.card-header -->
+                <!-- form start -->
+
+                <form method="post" enctype="multipart/form-data">
+                    <div class="card-body">
+                        <p class="text">@Model.Message</p>
+                        <div class="form-group" style="display:flex; justify-content:space-around">
+                            <div class="form-group col-sm-6">
+                                <label for="exampleInputEmail1">Name (*)</label>
+                                <input class="form-control" placeholder="Enter email" name="name">
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label>School (*)</label>
+                                <div class="custom-file">
+                                    <select class="form-control " name="schoolID">
+                                        <option value="">Select School</option>
+                                        @foreach (var school in Model.Schools)
+                                        {
+                                            <option value="@school.Id">@school.Name</option>
+                                        }
+                                        
+                                   </select>   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+
+                </form>
+
+
+
+            </div>
+
+        </div>
+
+    </div>
+</div>

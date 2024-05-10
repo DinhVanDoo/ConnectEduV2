@@ -1,0 +1,314 @@
+﻿@page
+
+@model ConnectEduV2.Pages.Home.HomeModel
+@using X.PagedList
+@{
+}
+
+<section class="home_banner_area" style="background: url(../img/banner/bannerhome.jpg) center no-repeat;">
+    <div class="banner_inner">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="banner_content text-center">
+                        
+                        <h2 class="text-uppercase mt-4 mb-5">
+                            Platform Connecting Mentor and Learners
+                        </h2>
+                        <div>
+                            <a href="#" class="primary-btn2 mb-3 mb-sm-0">learn more</a>
+                            <a href="javascript:void(0);" class="primary-btn ml-sm-3 ml-0" onclick="scrollToSection()">see course</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    // Function to scroll smoothly to the section
+    function scrollToSection() {
+        // Get the section element
+        var section = document.getElementById('findSubjectSection');
+
+        // Calculate the Y coordinate of the section
+        var sectionY = section.offsetTop;
+
+        // Scroll to the section with smooth behavior
+        window.scrollTo({
+            top: sectionY,
+            behavior: 'smooth'
+        });
+    }
+</script>
+<!--================ End Home Banner Area =================-->
+<!--================ Start Feature Area =================-->
+<section id="findSubjectSection" class="feature_area section_gap_top" style="padding-top:50px">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5">
+                <div class="main_title">
+                    <h2 class="mb-3">Find Subject</h2>
+                    <p>
+                        Please select school, department, semester.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schools navigation -->
+        <div class="row mb-4">
+            <div class="col-lg-9">
+                <div class="row">
+                    <div>
+                        <ul class="nav">
+                            @if (Model != null && Model.Schools != null)
+                            {
+                                @foreach (var school in Model.Schools)
+                                {
+                                    @if (Model.SchoolID == school.Id)
+                                    {
+                                        <li  class="nav-item">
+                                            <a style="color:brown" class="genric-btn default" asp-page="Home"
+                                   asp-route-schoolID=""
+                                   asp-route-departmentID=""
+                                   asp-route-semesterID=""
+                                   asp-route-key="@Model.Key">
+                                                @school.Name
+                                            </a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="nav-item">
+                                        <a class="genric-btn default"
+                                   asp-route-schoolID="@school.Id"
+                                   asp-route-departmentID="@ViewData["DepartmentID"]"
+                                   asp-route-semesterID="@ViewData["SemesterID"]"
+                                   asp-route-key="@Model.Key">
+                                            @school.Name
+                                        </a>
+                                    </li>
+                                    }
+                                    
+                                }
+                            }
+                        </ul>
+                    </div>
+                    <!-- Departments navigation -->
+                    <div>
+                        <ul class="nav">
+                            @if (Model != null && Model.Departments != null)
+                            {
+                                @foreach (var department in Model.Departments)
+                                {
+                                    @if(Model.DepartmentID == department.Id)
+                                    {
+                                        <li class="nav-item">
+                                            <a style="color:brown" class="genric-btn default" asp-page="Home"
+                                   asp-route-schoolID="@Model.SchoolID"
+                                   asp-route-departmentID=""
+                                   asp-route-semesterID=""
+                                   asp-route-key="@Model.Key">
+                                                @department.Name
+                                            </a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="nav-item">
+                                        <a class="genric-btn default" asp-page="Home"
+                                   asp-route-schoolID="@Model.SchoolID"
+                                   asp-route-departmentID="@department.Id"
+                                   asp-route-semesterID=""
+                                   asp-route-key="@Model.Key">
+                                            @department.Name
+                                        </a>
+                                    </li>
+                                    }
+                                    
+                                }
+                            }
+                        </ul>
+                    </div>
+
+                    <br />
+                    <!-- Semesters navigation -->
+                    <ul class="nav">
+                        @if (Model != null && Model.Semesters != null)
+                        {
+                            @foreach (var semester in Model.Semesters)
+                            {
+                                @if(Model.SemesterID == semester.Id)
+                                {
+                                    <li class="nav-item">
+                                        <a style="color:brown" class="genric-btn default" asp-page="Home"
+                               asp-route-schoolID="@Model.SchoolID"
+                               asp-route-departmentID="@Model.DepartmentID"
+                               asp-route-semesterID=""
+                               asp-route-key="@Model.Key">
+                                        @semester.Name
+                                    </a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="nav-item">
+                                        <a  class="genric-btn default" asp-page="Home"
+                               asp-route-schoolID="@Model.SchoolID"
+                               asp-route-departmentID="@Model.DepartmentID"
+                               asp-route-semesterID="@semester.Id"
+                               asp-route-key="@Model.Key">
+                                            @semester.Name
+                                        </a>
+                                    </li>
+                                }
+
+                        }
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+                <!-- Search input -->
+                <form method="get" >
+                    <input hidden name="schoolID" value="@Model.SchoolID" />
+                    <input hidden name="departmentID" value="@Model.DepartmentID" />
+                    <input hidden name="semesterID" value="@Model.SemesterID" />
+                    <input id="searchInput" value="@Model.Key" name="key" type="text" class="form-control" placeholder="Search...">
+                </form>
+                <script>
+                    document.getElementById('searchInput').addEventListener('keypress', function (event) {
+                        if (event.key === 'Enter') {
+                            event.preventDefault(); // Prevent the default action (if any)
+                            sessionStorage.setItem('scrollPosition5', window.scrollY); // Store the current scroll position in session storage
+                            this.form.submit(); // Submit the form
+                        }
+                    });
+
+                    // Check if there is a stored scroll position
+                    window.onload = function () {
+                        var storedScrollPosition = sessionStorage.getItem('scrollPosition5');
+                        if (storedScrollPosition !== null) {
+                            // Scroll to the stored position after the page reloads
+                            window.scrollTo(0, storedScrollPosition);
+
+                            // Clear the stored scroll position
+                            sessionStorage.removeItem('scrollPosition5');
+                        }
+                    };
+
+
+                </script>    
+            </div>
+        </div>
+
+        <!-- Subject list -->
+        <div class="row" id="listContainer">
+            @if (Model != null && Model.Subjects != null)
+            {
+                @foreach (var subject in Model.Subjects)
+                {
+                    <div class="col-lg-4 col-md-6">
+                        <a href="~/Class/Classes?subjectID=@subject.Id" style="color:black">
+                            <div class="single_feature">
+                                <div class="icon"><span class="flaticon-student"></span></div>
+                                <div class="desc">
+                                    <h4 class="mt-3 mb-2">@subject.Name</h4>
+                                    <p>
+                                        Trường : @subject.School?.Name<br> Ngành: @subject.Derpartment?.Name<br> Kỳ: @subject.Semester?.Name
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            }
+        </div>
+
+        <script>
+            function redirectToClass(subjectID) {
+                window.location.href = "Class/Classes?subjectID=" + subjectID;
+            }
+        </script>
+    </div>
+    <nav class="blog-pagination justify-content-center d-flex">
+        <ul class="pagination">
+            @if (Model.Subjects.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link genric-btn default" aria-label="Previous" asp-page="Home"
+                   asp-route-schoolID="@Model.SchoolID"
+                   asp-route-departmentID="@Model.DepartmentID"
+                   asp-route-semesterID="@Model.SemesterID"
+                   asp-route-key="@Model.Key"
+                   asp-route-pageNumber="@(Model.Subjects.PageNumber - 1)">
+                        <span aria-hidden="true">
+                            <i class="ti-angle-left"></i>
+                        </span>
+                    </a>
+                </li>
+            }
+            @for (var i = 1; i <= Model.Subjects.PageCount; i++)
+            {
+                <li class="page-item @(i == Model.Subjects.PageNumber ? "active" : "")">
+                    <a class="page-link genric-btn default" asp-page="Home"
+                   asp-route-schoolID="@Model.SchoolID"
+                   asp-route-departmentID="@Model.DepartmentID"
+                   asp-route-semesterID="@Model.SemesterID"
+                   asp-route-key="@Model.Key"
+                   asp-route-pageNumber="@i">@i</a>
+                </li>
+            }
+            @if (Model.Subjects.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link genric-btn default" aria-label="Next" asp-page="Home"
+                   asp-route-schoolID="@Model.SchoolID"
+                   asp-route-departmentID="@Model.DepartmentID"
+                   asp-route-semesterID="@Model.SemesterID"
+                   asp-route-key="@Model.Key"
+                   asp-route-pageNumber="@(Model.Subjects.PageNumber + 1)">
+                        <span aria-hidden="true">
+                            <i class="ti-angle-right"></i>
+                        </span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+</section>
+
+
+
+
+
+
+
+
+<!--================ End Feature Area =================-->
+<!--================ End Testimonial Area =================-->
+@section Scripts {
+    <script>
+        // Attach click event handlers to the filter links
+        $(document).ready(function () {
+            $(".genric-btn.default").on("click", function (e) {
+                // Store the current scroll position in session storage
+                sessionStorage.setItem('scrollPosition', window.scrollY);
+
+                // Allow the link to behave normally, triggering a full-page reload
+            });
+
+            // Check if there is a stored scroll position
+            var storedScrollPosition = sessionStorage.getItem('scrollPosition');
+            if (storedScrollPosition !== null) {
+                // Scroll to the stored position after the page reloads
+                window.scrollTo(0, storedScrollPosition);
+
+                // Clear the stored scroll position
+                sessionStorage.removeItem('scrollPosition');
+            }
+        });
+    </script>
+}

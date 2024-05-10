@@ -1,0 +1,246 @@
+﻿@page
+@using ConnectEduV2.Models
+@model ConnectEduV2.Areas.Admin.Pages.User.RegistrationModel
+@{
+    Layout = "~/Areas/Admin/Pages/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    /* Modal */
+    .modal {
+        display: none;
+        position: fixed;
+        padding-top: 50px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    /* Modal Content */
+    .modal-content {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 800px; /* Maximum width */
+    }
+
+    /* Caption of Modal Image */
+    #caption {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+        text-align: center;
+        color: #ccc;
+        padding: 10px 0;
+        height: 150px;
+    }
+
+    /* Add Animation */
+    .modal-content, #caption {
+        animation-name: zoom;
+        animation-duration: 0.6s;
+    }
+
+    keyframes zoom {
+        from
+
+    {
+        transform: scale(0);
+    }
+
+    to {
+        transform: scale(1);
+    }
+
+    }
+
+    /* The Close Button */
+    .close {
+        position: absolute;
+        top: 15px;
+        right: 35px;
+        color: #f1f1f1;
+        font-size: 40px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+    /* 100% Image Width on Small Screens */
+    media only screen and (max-width: 700px) {
+        .modal-content
+
+    {
+        width: 100%;
+    }
+
+    }
+</style>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">List Registration </h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Dashboard v2</li>
+                    </ol>
+                </div><!-- /.col -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="searchKeyword" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <button class="btn btn-primary" onclick="searchUsers()">Search</button>
+                    </div>
+                </div>
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+        <script>
+            function searchUsers() {
+                var searchKeyword = $("#searchKeyword").val();
+                var url = "/User/Registration?page=1&pageSize=@ViewBag.PageSize&searchKeyword=" + searchKeyword;
+                window.location.href = url;
+            }
+        </script>
+
+        <div id="imageModal" class="modal">
+            <span class="close">&times;</span>
+            <img class="modal-content" id="img01">
+            <div id="caption"></div>
+        </div>
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Simple Full Width Table</h3>
+
+                    <div class="card-tools">
+                        <ul class="pagination pagination-sm float-right">
+                            @if (Model.Users.PageNumber > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="~/Admin/User/Registration?pageNumber=@(Model.Users.PageNumber - 1)@(string.IsNullOrEmpty(Model.SearchKeyword) ? "" : $"&searchKeyword={Model.SearchKeyword}")">&laquo;</a>
+                                </li>
+                            }
+                            @for (int i = 1; i <= Model.Users.PageCount; i++)
+                            {
+                                <li class="page-item @(Model.Users.PageNumber == i ? "active" : "")">
+                                    <a class="page-link" href="~/Admin/User/Registration?pageNumber=@i@(string.IsNullOrEmpty(Model.SearchKeyword) ? "" : $"&searchKeyword={Model.SearchKeyword}")">@i</a>
+                                </li>
+                            }
+                            @if (Model.Users.PageNumber < Model.Users.PageCount)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="~/Admin/User/Registration?pageNumber=@(Model.Users.PageNumber + 1)@(string.IsNullOrEmpty(Model.SearchKeyword) ? "" : $"&searchKeyword={Model.SearchKeyword}")">&raquo;</a>
+                                </li>
+                            }
+                        </ul>
+
+                    </div>
+                </div>
+                <!-- /.card-header -->
+
+                <div class="card-body p-0">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 10px">#</th>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Facebook</th>
+                                <th>Image</th>
+                                <th>Data status</th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int index = 1;
+                            }
+                            @foreach (User list in Model.Users)
+                            {
+
+                                <tr>
+                                    <td>@(index++)</td>
+                                    <td>@list.Id</td>
+                                    <td>@list.Name</td>
+                                    <td>@list.Phone</td>
+                                    <td>@list.FacebookPath</td>
+                                    <td>
+                                        <img style="width: 50px" src="@list.ScoreboardPhoto" onclick="displayImage('@list.ScoreboardPhoto')">
+                                    </td>
+
+                                    <td>
+                                        <style>
+                                            .button {
+                                                background: none;
+                                                background-color: #28a745;
+                                                border: none;
+                                                padding: 5px;
+                                                margin: auto;
+                                                cursor: pointer;
+                                                border-radius: 6px;
+                                            }
+                                        </style>
+
+                                        <form asp-page="~/Admin/User/Registration?pageNumber=@Model.Users.PageNumber" method="post">
+                                            <button type="submit" class="button badge bg-danger" style="height:fit-content" name="id" value="@list.Id">
+                                                Accept
+                                            </button>
+                                        </form>
+
+                                    </td>
+
+
+
+                                </tr>
+
+                            }
+
+                        </tbody>
+
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+            <!-- /.card -->
+        </div>
+
+    </div>
+</div>
+<script>
+    // JavaScript function to display image in modal
+    function displayImage(src) {
+        var modal = document.getElementById('imageModal');
+        var modalImg = document.getElementById("img01");
+        modal.style.display = "block";
+        modalImg.src = src;
+        var span = document.getElementsByClassName("close")[0];
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+    }
+    function closeModal() {
+        var modal = document.getElementById('imageModal');
+        modal.style.display = "none";
+    }
+</script>

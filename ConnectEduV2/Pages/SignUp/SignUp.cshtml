@@ -1,0 +1,202 @@
+﻿@page
+@model ConnectEduV2.Pages.SignUp.SignUpModel
+@{
+}
+<style>
+    .form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        background-color: #ffffff;
+        padding: 30px;
+        width: 450px;
+        border-radius: 20px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    ::placeholder {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    .form button {
+        align-self: flex-end;
+    }
+
+    .flex-column > label {
+        color: #151717;
+        font-weight: 600;
+    }
+
+    .inputForm {
+        border: 1.5px solid #ecedec;
+        border-radius: 10px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        padding-left: 10px;
+        transition: 0.2s ease-in-out;
+    }
+
+    .input {
+        margin-left: 10px;
+        border-radius: 10px;
+        border: none;
+        width: 85%;
+        height: 100%;
+    }
+
+        .input:focus {
+            outline: none;
+        }
+
+    .inputForm:focus-within {
+        border: 1.5px solid #2d79f3;
+    }
+
+    .flex-row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+        justify-content: space-between;
+    }
+
+        .flex-row > div > label {
+            font-size: 14px;
+            color: black;
+            font-weight: 400;
+        }
+
+    .span {
+        font-size: 14px;
+        margin-left: 5px;
+        color: #2d79f3;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .button-submit {
+        margin: 20px 0 10px 0;
+        background-color: #151717;
+        border: none;
+        color: white;
+        font-size: 15px;
+        font-weight: 500;
+        border-radius: 10px;
+        height: 50px;
+        width: 100%;
+        cursor: pointer;
+    }
+
+        .button-submit:hover {
+            background-color: #252727;
+        }
+
+    .p {
+        text-align: center;
+        color: black;
+        font-size: 14px;
+        margin: 5px 0;
+    }
+
+    .btn {
+        margin-top: 10px;
+        width: 100%;
+        height: 50px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 500;
+        gap: 10px;
+        border: 1px solid #ededef;
+        background-color: white;
+        cursor: pointer;
+        transition: 0.2s ease-in-out;
+    }
+
+        .btn:hover {
+            border: 1px solid #2d79f3;
+            ;
+        }
+
+</style>
+<section class="home_banner_area">
+    <div class="banner_inner">
+        <div class="container" style="justify-content:center; margin:auto; margin-top:250px ">
+            <form method="post" class = "form" style = "justify - content:center; margin: auto;" enctype="multipart/form-data" asp-page="/SignUp/Signup" asp-page-handler="OnPost"> 
+
+            
+           
+                @Html.ValidationSummary(true)
+                @ViewData["ErrorEmail"]
+                <div class="flex-column">
+                    <label>Email </label>
+                </div>
+                <div class="inputForm">                   
+                     <input asp-for="Email" class="input" placeholder="Enter email" />
+                  
+
+
+                </div>
+                <span asp-validation-for="Email" class="text text-danger"></span>
+                
+                <div class="flex-column">
+                    <label>Password </label>
+                </div>
+                <div class="inputForm">
+                    <input asp-for="Password" class="input" placeholder="Enter Password" type="password"/>
+                    
+                    
+                    <svg viewBox="0 0 576 512" height="1em" xmlns="http://www.w3.org/2000/svg"><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z"></path></svg>
+
+                </div>
+                <span asp-validation-for="Password" class="text text-danger"></span>
+                <div class="flex-column">
+                    <label>Name</label>
+                </div>
+                <div class="inputForm">
+                   <input asp-for="Name" class="input" placeholder="Enter Name" />
+                   
+                    
+
+                </div>
+                <span asp-validation-for="Name" class="text text-danger"></span>
+             
+                <div class="flex-column">
+                    <label>Avatar</label>
+                </div>
+                <div class="inputForm">
+                  
+                    <input type="file"  asp-for="AvatarForm" class="input" placeholder="Choose Avatar" />
+                    
+
+                </div>
+
+
+                <div class="flex-column" style="display: flex;">
+                    <div>
+                        <select asp-for="SchoolId" class="form-control" id="schoolSelect">
+                            @foreach (var item in Model.School)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+                    <div>
+                        <select asp-for="DepartmentId" class="form-control" id="departmentSelect">
+                            @foreach (var item in Model.Departments)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                </div>
+
+               
+                <button class="button-submit" type="submit">Sign Up</button>
+                
+           </form>
+        </div>
+    </div>
+</section>

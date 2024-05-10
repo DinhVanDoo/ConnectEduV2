@@ -1,0 +1,294 @@
+﻿@page
+@using ConnectEduV2.Models
+@model ConnectEduV2.Pages.Class.ClassRegistrationListModel
+@{
+}
+<!--================Home Banner Area =================-->
+<section class="banner_area">
+    <div class="banner_inner d-flex align-items-center">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="banner_content text-center">
+                        <h2>Registration History</h2>
+                        <div class="page_link">
+                            <a href="index.html">Home</a>
+                            <a href="courses.html">History</a>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--================End Home Banner Area =================-->
+<section class="blog_area section_gap">
+    <span> @ViewData["ErrorAmount"]</span>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12" >
+                <div class="blog_left_sidebar">     
+                    @foreach (ClassRegistration list in Model.ClassRegistrations)
+                    {
+                        var popupId = "popup-" + list.Id;
+                        var popupFeedbackId = "popup-feedback-" + list.Id;
+                        <article class="row blog_item" style="background-color: ghostwhite;height:200px">
+                            <div class="col-md-4">
+                                <div class="blog_info text-right">
+
+                                    <ul class="blog_meta list">
+                                        <li><a href="#">@list.Class?.User?.Name<i class="ti-user"></i></a></li>
+                                        <li><a href="#">@list.Date<i class="ti-calendar"></i></a></li>
+                                        <li><a href="#">@list.RegistrationStatus?.Name<i class="ti-ruler-pencil"></i></a></li>
+                                        <li><a href="#">@list.Class?.Price?.ToString("N0")<i class="ti-money"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="blog_post">
+                                    <div class="blog_details">
+
+                                        <a asp-page="/Class/ClassDetail" asp-route-classID="@list.Class?.Id">
+                                            <h2>@list.Class?.Name</h2>
+                                        </a>
+                                        @if (list.PaymentStatusId == 1)
+                                        {
+                                            <p>
+                                                CoursePath: @list.Class?.CoursePath
+                                            </p>
+                                        }
+                                        @if (list.PaymentStatusId == 2)
+                                        {
+                                            <a class="blog_btn modal-open" data-popup-id="@popupId">Pay now</a>
+                                        }
+                                        else if(list.RegistrationStatusId == 2)
+                                        {
+                                            <a asp-page="/Class/ClassRegistrationList" asp-page-handler="Complete" asp-route-id="@list.Id" class="blog_btn">Complete</a>
+                                        }
+                                        else
+                                        {
+                                            <div class="d-flex">
+                                                <a class="blog_btn">Done</a>
+                                                <a class="blog_btn modal-open" data-popup-id="@popupFeedbackId">Feedback</a>
+                                                </div>
+                                            
+                                        }
+
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <div class="Popup" id="@popupId">
+                            <form id="ok" class="discountForm" method="post" asp-page="/Class/ClassRegistrationList">
+
+                                <span class="DiscountHeading">Payment</span>
+                                <p class="DiscountSubheading">The amount payable is: @list.Class?.Price?.ToString("N0") VND</p>
+                                <p class="DiscountSubheading">Enter password to verify payment.</p>
+                                
+                                <div class="inputContainer">
+                                    <input hidden name="registrationID" value="@list.Id">
+                                    <input hidden name="amount" value="@list.Class?.Price">
+                                    <input placeholder="Enter your password" type="password" name="password">
+                                    <button type="submit" class="submitButton">Pay now</button>
+                                </div>
+
+                            </form> <button class="exitBtn close-popup">×</button>
+                        </div>
+                        <div class="Popup2" id="@popupFeedbackId">
+                            <form class="discountForm" method="post" asp-page="/Class/ClassRegistrationList" asp-page-handler="Feedback">
+
+                                <span class="DiscountHeading">Feedback</span>
+                               
+                                <div class="inputContainer">
+                                    <input hidden name="registrationID" value="@list.Id">
+                                    <input hidden name="classID" value="@list.Class?.Id">
+                                   
+                                    <input placeholder="Enter your Feedback" type="text" name="feedback" value="@list.Feedback?.Comment">
+                                    <button type="submit" class="submitButton" onclick="">Send</button>
+                                </div>
+
+                            </form> <button class="exitBtn close-popup2">×</button>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="blog-pagination justify-content-center d-flex">
+        <ul class="pagination">
+            @if (Model.ClassRegistrations.PageNumber > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link genric-btn default" aria-label="Previous" asp-page="/Class/ClassRegistrationList"
+                   asp-route-pageNumber="@(Model.ClassRegistrations.PageNumber-1)">
+                        <span aria-hidden="true">
+                            <i class="ti-angle-left"></i>
+                        </span>
+                    </a>
+                </li>
+            }
+            @for (int i = 1; i <= Model.ClassRegistrations.PageCount; i++)
+            {
+                <li class="page-item @(i == Model.ClassRegistrations.PageNumber ? "active" : "")">
+                    <a class="page-link genric-btn default "
+                   asp-page="/Class/ClassRegistrationList"
+                   asp-route-pageNumber="@i">@i</a>
+                </li>
+            }
+            @if (Model.ClassRegistrations.PageNumber < Model.ClassRegistrations.Count - 1)
+            {
+                <li class="page-item">
+                    <a class="page-link genric-btn default" aria-label="Next" asp-page="/Class/ClassRegistrationList"
+                   asp-route-pageNumber="@(Model.ClassRegistrations.PageNumber+1)">
+                        <span aria-hidden="true">
+                            <i class="ti-angle-right"></i>
+                        </span>
+                    </a>
+                </li>
+            }
+
+
+        </ul>
+    </nav>
+    
+    <script src="jquery-3.7.1.min.js"></script>
+    <script>
+
+        document.querySelectorAll('.modal-open').forEach(item => {
+            item.addEventListener('click', event => {
+                // Lấy id của popup tương ứng từ thuộc tính dữ liệu data-popup-id
+                var popupId = item.getAttribute('data-popup-id');
+
+                // Lấy popup tương ứng dựa trên id
+                var popup = document.getElementById(popupId);
+
+                // Hiển thị popup
+                popup.style.display = 'block';
+            });
+        });
+
+        document.querySelectorAll('.close-popup').forEach(item => {
+            item.addEventListener('click', event => {
+                // Tìm popup chứa nút đóng được nhấp
+                var popup = item.closest('.Popup');
+                
+                // Ẩn popup
+                popup.style.display = 'none';
+               
+                
+            });
+        });
+        document.querySelectorAll('.close-popup2').forEach(item => {
+            item.addEventListener('click', event => {
+                // Tìm popup chứa nút đóng được nhấp
+                var popup = item.closest('.Popup2');
+
+                // Ẩn popup
+                popup.style.display = 'none';
+
+
+            });
+        });
+       
+        
+      
+    </script>
+    <style>
+        .Popup {
+            display: none;
+            position: fixed;
+            width:fit-content;
+            height:fit-content;
+            top: 35%;
+            left: 40%;
+            background-color:aliceblue;
+            z-index: 9999;
+        }
+
+        .Popup2 {
+            display: none;
+            position: fixed;
+            width: fit-content;
+            height: fit-content;
+            top: 35%;
+            left: 40%;
+            background-color: aliceblue;
+            z-index: 9999;
+        }
+        .discountForm {
+            width: 250px;
+            height: 300px;
+            background-color: rgb(255, 255, 255);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 30px;
+            gap: 20px;
+            position: relative;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.082);
+        }
+
+        .DiscountHeading {
+            font-size: 1.5em;
+            color: rgb(15, 15, 15);
+            font-weight: 700;
+        }
+
+        .DiscountSubheading {
+            font-size: 0.8em;
+            color: black;
+            text-align: center;
+        }
+
+        .inputContainer {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #email-address {
+            height: 30px;
+            width: 100%;
+            border: 1px solid rgb(228, 228, 228);
+            background-color: white;
+            padding: 0px 10px;
+            outline: none;
+            text-align: center;
+        }
+
+        .submitButton {
+            width: 100%;
+            height: 30px;
+            border: none;
+            background-color: rgb(15, 15, 15);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+            .submitButton:hover {
+                background-color: rgb(36, 36, 36);
+            }
+
+        .exitBtn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.171);
+            background-color: rgb(255, 255, 255);
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            border: none;
+            color: black;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+    </style>
+</section>

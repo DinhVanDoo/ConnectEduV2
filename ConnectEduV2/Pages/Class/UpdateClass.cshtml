@@ -1,0 +1,75 @@
+﻿@page
+@model ConnectEduV2.Pages.Class.UpdateClassModel
+@{
+}
+<section class="banner_area">
+    <div class="banner_inner d-flex align-items-center">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="banner_content text-center">
+                        <h2>Update Class</h2>
+                        <div class="page_link">
+                            <a href="index.html">Home</a>
+                            <a href="courses.html">Update Class</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="popular_courses section_gap">
+    <div class="container">
+        <h3 class="mb-30 title_color">Form Element</h3>
+        <form method="post" asp-page="Class/UpdateClass">
+            <span>@ViewData["EmptyError"]</span>
+            <span>@ViewData["Success"] </span>
+            
+            <!-- Các trường nhập liệu -->
+            <div class="mt-10">
+                <p>Class Name (*)</p>
+                <input type="text" asp-for="ClassName" placeholder="Class Name" required class="single-input" >
+                <span asp-validation-for="ClassName" class="text text-danger"></span>
+            </div>
+            <div class="mt-10">
+                <p>Class Description (*)</p>
+                <textarea  asp-for="Description" maxlength="1000" class="single-textarea" placeholder="Description" required></textarea>
+                <span asp-validation-for="Description" class="text text-danger"></span>
+            </div>
+            <div class="mt-10">
+                <p>Start</p>
+                <input asp-for="StartDate" type="datetime-local" placeholder="Start Date" class="single-input">
+
+            </div>
+            <div class="mt-10">
+                <p>End</p>
+                <input asp-for="EndDate" type="datetime-local" placeholder="End Date" class="single-input">
+            </div>
+            <div class="mt-10">
+
+                <p>Class Price (*)</p>
+                <input asp-for="Price" type="text" placeholder="Price" required class="single-input">
+                <span asp-validation-for="Price" class="text text-danger"></span>
+            </div>
+            <div class="mt-10">
+                <p>Course Path (*)</p>
+                <input asp-for="CoursePath" type="text" placeholder="Course Path" required class="single-input">
+                <span asp-validation-for="CoursePath" class="text text-danger"></span>
+            </div>
+            <div class="mt-10">
+                <p>Class Seat Number </p>
+                <input asp-for="SeatNumber" type="text" placeholder="Seat Number" required class="single-input">
+                <span asp-validation-for="SeatNumber" class="text text-danger"></span>
+            </div>
+            <div class="mt-10" style="justify-content:center">
+
+                <input style="height:40px;line-height:0; margin:auto; text-align:center" type="submit" class="primary-btn" value="Update" />
+            </div>
+
+        </form>
+    </div>
+
+</section> 

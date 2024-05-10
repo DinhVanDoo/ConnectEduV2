@@ -1,0 +1,168 @@
+﻿@page
+@using X.PagedList
+@model ConnectEduV2.Pages.Class.ClassesModel
+@{
+}
+<!--================Home Banner Area =================-->
+<section class="banner_area">
+    <div class="banner_inner d-flex align-items-center">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="banner_content text-center">
+                        <h2>Classes</h2>
+                        <div class="page_link">
+                            <a href="index.html">Home</a>
+                            <a href="courses.html">Classes</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--================End Home Banner Area =================-->
+<!--================ Start Popular Courses Area =================-->
+<div class="popular_courses section_gap_top">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="main_title">
+                    <h2 class="mb-3">Our Popular Classes</h2>
+                    
+                </div>
+            </div>
+        </div>
+        <!-- Start row for date pickers and search -->
+        <form asp-page="Class" method="get">
+            <input name="subjectID" hidden value="@Model.SubjectID" type="text" />
+            <div class="row justify-content-center mt-4">
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-lg-6 form-date">
+                            <label for="start_date">Start Date:</label>
+                            <input type="datetime-local" id="start_date" name="start_date" class="form-control">
+                        </div>
+                        @* <div class="col-lg-6">
+                            <label for="end_date">End Date:</label>
+                            <input type="datetime-local" id="end_date" name="end_date" class="form-control">
+                        </div> *@
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <label for="start_date">Search</label>
+                    <div class="input-group">
+
+                        <input type="text" name="searchKeyword" class="form-control" value="@Model.Key" placeholder="Search for...">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary" type="button">Search</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <br />
+        <br />
+        <!-- End row for date pickers and search -->
+
+        <div class="row">
+            <!-- single course -->
+            @foreach (ConnectEduV2.Models.Class list in Model.Classes)
+            {
+                <div class="single_course col-lg-4">
+                    <div class="course_head">
+                        <img class="img-fluid" src="~/img/courses/default.jpg" alt="" />
+                    </div>
+                    <div class="course_content">
+                        <span style="top: 28px; width:120px; font-size : 15px; height:33px;line-height: 37px" class="price">@list.Price?.ToString("N0") đ</span>
+                        <span class="tag mb-4 d-inline-block">@list.Subject?.Name</span>
+                        <h4 class="mb-3">
+                            <a asp-page="/Class/ClassDetail" asp-route-classID="@list.Id" >@list.Name</a>
+                        </h4>
+                        <p>
+                            @list.Describe
+                        </p>
+                        <div class="course_meta d-flex justify-content-lg-between align-items-lg-center flex-lg-row flex-column mt-4">
+                            <div class="authr_meta">
+                                <img class="img-fluid smaller-img" src="@list.User?.Image" alt="" />
+                                <span class="d-inline-block ml-2">@list.User?.Name</span>
+                            </div>
+                            <div class="mt-lg-0 mt-3">
+                                <span class="meta_info mr-4">
+                                    <a href="#"> <i class="ti-user mr-2"></i>@list.ClassRegistrations?.Count </a>
+                                </span>
+                                <span class="meta_info"><a href="#"> <i class="ti-heart mr-2"></i>35 </a></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+     
+            }
+            @if (Model.Classes.Count == 0)
+            {
+                <div style="margin:auto">
+                    <h4 style="margin:auto">Hiện không có mentor nào hỗ trợ môn này</h4>
+                </div>
+            }
+            <style>
+                .smaller-img {
+                    max-width: 30px; /* Kích thước tối đa chiều rộng */
+                    max-height: 30px; /* Kích thước tối đa chiều cao */
+                    border-radius: 10px;
+                }
+            </style>
+            <!-- Add clearfix here -->
+
+
+        </div>
+        <nav class="blog-pagination justify-content-center d-flex">
+            <ul class="pagination">
+                @if (Model.Classes.PageNumber > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link genric-btn default" aria-label="Previous" asp-controller="Class" asp-action="Classes"
+                       asp-route-start_date="@Model.Start_date"
+                       asp-route-end_date="@Model.End_date"
+                       asp-route-searchKeyword="@Model.Key"
+                       asp-route-subjectID="@Model.SubjectID"
+                       asp-route-pageNumber="@(Model.Classes.PageNumber-1)">
+                            <span aria-hidden="true">
+                                <i class="ti-angle-left"></i>
+                            </span>
+                        </a>
+                    </li>
+                }
+                @for (int i = 1; i <= Model.Classes.PageCount; i++)
+                {
+                    <li class="page-item @(i == Model.Classes.PageNumber ? "active" : "")">
+                        <a class="page-link genric-btn default" asp-controller="Class" asp-action="Classes"
+                       asp-route-start_date="@Model.Start_date"
+                       asp-route-end_date="@Model.End_date"
+                       asp-route-searchKeyword="@Model.Key"
+                       asp-route-subjectID="@Model.SubjectID"
+                       asp-route-pageNumber="@i">@i</a>
+                    </li>
+                }
+                @if (Model.Classes.PageNumber < Model.Classes.Count - 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link genric-btn default" aria-label="Next" asp-controller="Class" asp-action="Classes"
+                       asp-route-start_date="@Model.Start_date"
+                       asp-route-end_date="@Model.End_date"
+                       asp-route-searchKeyword="@Model.Key"
+                       asp-route-subjectID="@Model.SubjectID"
+                       asp-route-pageNumber="@(Model.Classes.PageNumber+1)">
+                            <span aria-hidden="true">
+                                <i class="ti-angle-right"></i>
+                            </span>
+                        </a>
+                    </li>
+                }
+
+
+            </ul>
+        </nav>
+    </div>
+</div>
+<!--================ End Popular Courses Area =================-->

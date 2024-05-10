@@ -1,0 +1,776 @@
+﻿@page
+@using ConnectEduV2.Models
+@model ConnectEduV2.Pages.Profile.MyProfileModel
+@{
+}
+<section class="banner_area">
+    <div class="banner_inner d-flex align-items-center">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="banner_content text-center">
+                        <h2>My Profile</h2>
+                        <div class="page_link">
+                            <a href="index.html">Home</a>
+                           
+                            <a href="single-blog.html">My Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--================Blog Area =================-->
+<section class="blog_area single-post-area section_gap">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 posts-list">
+
+                <!--================Update profile =================-->
+                @if (ViewData["UpdateProfile"] != null)
+                {
+                    <div class="comment-form">
+                        <h4>Update Profile</h4>
+                        <form asp-page="/Profile/MyProfile" asp-page-handler="Change" method="post" enctype="multipart/form-data">
+                            @{
+                                <div class="form-group">
+                                    <div>
+                                        <p>Choose School</p>
+                                        <ul class="nav">
+                                            @if (Model.schools != null)
+                                            {
+                                                @foreach (School schools in Model.schools)
+                                                {
+                                                    @if (Model.SchoolID == schools.Id)
+                                                    {
+                                                        <li class="nav-item">
+                                                            <a style="color:brown" class="genric-btn default active"
+                                           asp-page="/Profile/MyProfile" asp-page-handler="OnGet"
+                                           asp-route-function="UpdateProfile"
+                                           asp-route-schoolID=""
+                                           asp-route-departmentID=""
+                                           >
+                                                                @schools.Name
+                                                            </a>
+                                                        </li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li class="nav-item">
+                                                            <a class="genric-btn default active" asp-page="/Profile/MyProfile" asp-page-handler="OnGet"
+                                           asp-route-function="UpdateProfile"
+                                           asp-route-schoolID="@schools.Id"
+                                           asp-route-departmentID="@ViewBag.DepartmentID"
+                                           >
+                                                                @schools.Name
+                                                            </a>
+                                                        </li>
+                                                    }
+                                                }
+                                            }
+                                        </ul>
+                                    </div>
+                                    @if (Model.departments != null)
+                                    {
+                                        <div>
+                                            <p>Choose Department</p>
+                                            <ul class="nav">
+
+                                                @foreach (Department departments in Model.departments)
+                                                {
+                                                    @if (Model.DepartmentID == departments.Id)
+                                                    {
+                                                        <li class="nav-item">
+                                                            @* <a class="genric-btn default" href="@Url.Action("Index", new { schoolID = ViewBag.SchoolID, departmentID = departments.Id, semesterID = ViewBag.SemesterID, key = ViewBag.Key })">@departments.Name</a>*@
+                                                            <a style="color: brown" class="genric-btn default " asp-page="/Profile/MyProfile" asp-page-handler="OnGet"
+                                           asp-route-departmentID=""
+                                           asp-route-function="UpdateProfile">
+                                                                @departments.Name
+                                                            </a>
+                                                        </li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li class="nav-item">
+                                                            @* <a class="genric-btn default" href="@Url.Action("Index", new { schoolID = ViewBag.SchoolID, departmentID = departments.Id, semesterID = ViewBag.SemesterID, key = ViewBag.Key })">@departments.Name</a>*@
+                                                            <a style="" class="genric-btn default " asp-page="/Profile/MyProfile" asp-page-handler="OnGet"
+                                           asp-route-schoolID="@Model.SchoolID"
+                                           asp-route-departmentID="@departments.Id"
+                                           asp-route-function="UpdateProfile">
+                                                                @departments.Name
+                                                            </a>
+                                                        </li>
+                                                    }
+                                                }
+                                            </ul>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="form-group form-inline">
+                                    <div class="form-group col-lg-6 col-md-6 name">
+                                    <label>Name (*)</label>
+                                        <input type="text" class="form-control" name="name" value="@Model.User.Name" id="name" placeholder="Enter Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Name'">
+                                        <span id="nameError" style="color: red;"></span>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 name">
+                                        <label>Phone</label>
+                                        <input type="text" class="form-control" name="phone" value="@Model.User?.Phone"  placeholder="Enter Phone" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Phone'">
+                                        <span id="phone" style="color: red;"></span>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 name">
+                                        <label>Facebook path</label>
+                                        <input type="text" class="form-control" name="facebook" value="@Model.User?.FacebookPath"  placeholder="Enter Facebook path" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Facebook path'">
+                                        <span id="phone" style="color: red;"></span>
+                                    </div>
+                                    <script>
+                                        document.getElementById("name").addEventListener("blur", function () {
+                                            var nameInput = this.value.trim();
+                                            var nameError = document.getElementById("nameError");
+                                            if (nameInput === "") {
+                                                nameError.textContent = "Tên không được trống.";
+                                            } else if (nameInput.length > 150) {
+                                                nameError.textContent = "Tên không được vượt quá 150 ký tự.";
+                                            } else {
+                                                nameError.textContent = "";
+                                            }
+                                        });
+                                    </script>
+                                    <div class="form-group col-lg-6 col-md-6 img-fluid card-img">
+                                        <label>Avatar</label>
+                                        <!-- Input field for selecting an image -->
+                                        <input type="file" placeholder="Choose Avatar" class="form-control-file" id="image" name="image" onchange="previewImage()">
+                                    </div>
+                                </div>
+                                <!-- Image preview area -->
+                                <div id="imagePreview"></div>
+                                <input type="text" hidden name="schoolID" value="@Model.SchoolID">
+                                <input type="text" hidden name="departID" value="@Model.DepartmentID">
+                                <input type="text" hidden name="id" value="@Model.User?.Id">
+                                <input style="height:40px;line-height:0" type="submit" class="primary-btn" value="Update" />
+                            }
+                        </form>
+                    </div>
+                }
+                <script>
+                    function previewImage() {
+                        var preview = document.querySelector('#imagePreview');
+                        var file = document.querySelector('input[type=file]').files[0];
+                        var reader = new FileReader();
+
+                        reader.onloadend = function () {
+                            var img = document.createElement('img');
+                            img.src = reader.result;
+                            img.style.maxWidth = '50%'; // Set maximum width for the preview image
+                            preview.innerHTML = ''; // Clear previous preview
+                            preview.appendChild(img);
+                        }
+
+                        if (file) {
+                            reader.readAsDataURL(file);
+                        } else {
+                            preview.innerHTML = 'No image selected';
+                        }
+                    }
+                </script>
+
+
+                @if (ViewData["ChangePassword"] != null)
+                {
+                    <div class="comment-form">
+                        <h4>Change password</h4>
+                        <span>@ViewData["ErrorPassword"]</span>
+                        <span id="passError" style="color: red;"></span>
+                        <form asp-page="/Profile/MyProfile" asp-page-handler="ChangePassword" method="post" onsubmit="return validateForm()">
+
+                            <div class="form-group form-inline">
+
+                                <div class="form-group col-lg-6 col-md-6 name">
+                                    <input type="password" class="form-control" name="oldPass" id="oldPass" placeholder="Enter your password"
+                                           onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your password'">
+
+                                </div>
+                                <div class="form-group col-lg-6 col-md-6 email">
+                                    <input type="password" class="form-control" name="newPass" id="newPass" placeholder="Enter new password"
+                                           onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter new password'">
+
+                                </div>
+                            </div>
+                            <input style="height:40px;line-height:0" type="submit" class="primary-btn" value="Change">
+                        </form>
+                        <script>
+                            function validateForm() {
+                                var newPassword = document.getElementById("newPass").value.trim();
+                                var oldPassword = document.getElementById("oldPass").value.trim();
+
+                                var passError = document.getElementById("passError");
+                                if (newPassword.length < 6 || oldPassword.length < 6) {
+                                    passError.textContent = "Password must be at least 6 characters long.";
+                                    return false; // Prevent form submission
+                                } else {
+                                    passError.textContent = "";
+                                    return true; // Allow form submission
+                                }
+                            }
+                        </script>
+                    </div>
+                }
+
+                @if (ViewData["BecomMentor"] != null)
+                {
+                    <div class="comment-form">
+                        <h4>Send a photo of your transcript to register to become a mentor</h4>
+                        <span>@ViewData["SaveFile"]</span>
+                        <span>@ViewData["SaveFileError"]</span>
+                        <span id="passError" style="color: red;"></span>
+                        <form asp-page="/Profile/MyProfile" asp-page-handler="BecomMentor" method="post" enctype="multipart/form-data">
+                                <div class="form-group form-inline">
+                                    <div class="form-group col-lg-6 col-md-6 name">
+                                        <input type="text" class="form-control" name="email" id="oldPass" readonly
+                                               value="@Model.User.Email">
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 img-fluid card-img">
+                                        <!-- Input field for selecting an image -->
+                                        <input type="file" placeholder="Choose Avatar" class="form-control-file" id="image" name="image" onchange="previewImage()">
+                                    </div>
+                                </div>
+                                <div id="imagePreview"></div>
+                                <input style="height:40px;line-height:0" type="submit" class="primary-btn" value="Send">                          
+                        </form>
+                    </div>
+                }
+                @if (ViewBag.Wallet != null)
+                {
+                    <div class="container">
+                        <div class="wallet">
+                            <aside class="left-wallet">
+                                <div class="wallet-head">
+                                    <h1> My Wallets </h1>
+                                    <div class="modal-open">
+                                        +
+                                    </div>
+                                </div>
+                                <div class="cc-select">
+                                </div>
+                            </aside>
+                            <content class="right-trans">
+                                <h1> Current Balance </h1>
+                                <h4 id="balance"></h4>
+                                <div class="trans-list" style="display: block;">
+                                    <div class="trans trans-visa">
+                                        <div class="trans-details">
+                                            <h3 class="trans-name">Apple Iphone 6, 6g GB</h3>
+                                            <h5 style="padding-left:0px" class="trans-type-date"> Electronics #343223 - 12 July, 2015</h5>
+                                        </div>
+                                        <div class="trans-amt">
+                                            <h4 class="trans-amt amt-blue">$ 650.00</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </content>
+                        </div>
+                    </div>
+
+                    <div class="modal">
+                        <div class="modal-body">
+                            <h3>Add a New Card</h3>
+                            <h5>Select a card on the left and enter the information</h5>
+                            <div class="modal-close">x</div>
+                            <div class="modal-cards">
+                                <div class="md-cc visa">
+                                    <div class="cc-img visa"></div>
+                                </div>
+                                <div class="md-cc amex">
+
+                                    <div class="cc-img amex"></div>
+                                </div>
+                                <div class="md-cc mc">
+                                    <div class="cc-img mc"></div>
+                                </div>
+                            </div>
+                            <form>
+                                <input type="text" id="ccnum" disabled>
+                                <select name="month" id="month" required disabled>
+                                    <option value="">Month</option>
+                                    <option value="01">Janaury</option>
+                                    <option value="02">February</option>
+                                    <option value="03">March</option>
+                                    <option value="04">April</option>
+                                    <option value="05">May</option>
+                                    <option value="06">June</option>
+                                    <option value="07">July</option>
+                                    <option value="08">August</option>
+                                    <option value="09">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                                <select name="year" id="year" required disabled>
+                                    <option value="">Year</option>
+                                    <option value="16">2016</option>
+                                    <option value="17">2017</option>
+                                    <option value="18">2018</option>
+                                    <option value="19">2019</option>
+                                    <option value="20">2020</option>
+                                    <option value="21">2021</option>
+                                    <option value="22">2022</option>
+                                    <option value="23">2023</option>
+                                    <option value="24">2024</option>
+                                </select>
+                            </form>
+                            <button class="modal-add-cc"> Add </button>
+                        </div>
+                    </div>
+                    <style>
+                        import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600|Roboto:300,400');
+
+                        body {
+                            font-family: 'Open Sans', sans-serif;
+                            background-color: rgb(255, 204, 102);
+                        }
+
+                        .container {
+                            width: 100%;
+                            padding: 40px 0px 40px 0px;
+                        }
+
+                        .wallet {
+                            margin: 0 auto;
+                            border-radius: 5px;
+                            background-color: #FFFFFF;
+                            height: 680px;
+                            max-width: 900px;
+                            display: flex;
+                        }
+
+                        .left-wallet {
+                            background-color: #f2f2f2;
+                            width: 300px;
+                            height: initial;
+                            padding: 40px;
+                            border-radius: 5px;
+                        }
+
+                        .right-trans {
+                            background-color: #FFFFFF;
+                            width: 600px;
+                            height: initial;
+                            padding: 40px;
+                            border-radius: 5px;
+                        }
+
+                        h1 {
+                            color: #7d818e;
+                            margin: 0;
+                            font-weight: 400;
+                            font-size: 25px;
+                            font-family: 'Open Sans', sans-serif;
+                        }
+
+                        h4 {
+                            margin: 0;
+                            font-size: 30px;
+                            font-weight: bold;
+                            font-family: 'Open Sans', sans-serif;
+                        }
+
+                        .left-wallet h1,
+                        .left-wallet modal-open,
+                        .right-trans h1,
+                        .right-trans #balance {
+                            font-family: 'Open Sans', sans-serif;
+                            display: inline-block;
+                        }
+
+                        #balance {
+                            float: right;
+                            line-height: 34px;
+                            font-size: 30px;
+                            font-weight: bold;
+                            color: #464646;
+                        }
+
+                        .modal-open {
+                            display: inline-block;
+                            float: right;
+                            padding: 0;
+                            font-size: 42px;
+                            line-height: 36px;
+                            color: #b7b7b7;
+                            cursor: pointer;
+                        }
+
+                            .modal-open:hover {
+                                display: inline-block;
+                                float: right;
+                                padding: 0;
+                                font-size: 42px;
+                                line-height: 36px;
+                                color: #868686;
+                                cursor: pointer;
+                            }
+
+                        .trans-list {
+                            display: none;
+                            border-top: 1px solid #f2f2f2;
+                            margin-top: 40px;
+                            overflow-y: scroll;
+                            max-height: 550px;
+                        }
+
+                        .trans {
+                            margin-top: 15px;
+                        }
+
+                        .trans-plus {
+                            background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/384009/plus-icon.png);
+                            background-repeat: no-repeat;
+                            width: 40px;
+                            height: 50px;
+                            display: block;
+                            float: left;
+                            position: relative;
+                            top: 15px;
+                        }
+
+                        .trans-minus {
+                            background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/384009/minus-icon.png);
+                            background-repeat: no-repeat;
+                            width: 40px;
+                            height: 50px;
+                            display: block;
+                            float: left;
+                            position: relative;
+                            top: 15px;
+                        }
+
+                        .trans-details {
+                            margin-top: 20px;
+                            display: inline-block;
+                            width: 80%;
+                        }
+
+                        .trans-name,
+                        .trans-type-date {
+                            margin: 3px;
+                        }
+
+                        .trans-name {
+                            display: inline-block;
+                        }
+
+                        .trans-type-date {
+                            color: #888;
+                            padding-left: 40px;
+                        }
+
+                        .trans-amt {
+                            float: right;
+                            line-height: 55px;
+                            font-size: 18px;
+                            margin-top: 10px
+                        }
+
+                        .amt-green {
+                            color: rgb(113, 207, 66);
+                        }
+
+                        .amt-blue {
+                            color: rgb(166, 178, 216);
+                        }
+
+                        .cc-select {
+                            margin-top: 34px;
+                            overflow-y: scroll;
+                            max-height: 540px;
+                            padding: 5px;
+                        }
+
+                        .cc {
+                            cursor: pointer;
+                            background-color: #fff;
+                            padding: 20px;
+                            border-radius: 5px;
+                            margin-bottom: 30px;
+                            border: 1px solid #e1e1e1;
+                            transition: .1s ease-in-out;
+                        }
+
+                            .cc:hover {
+                                transform: scale(1.03);
+                                border: 1px solid gray;
+                            }
+
+                        .cc-active:hover {
+                            transform: scale(1);
+                            border: 4px solid rgb(132, 148, 202);
+                        }
+
+                        .cc-active {
+                            border: 4px solid rgb(132, 148, 202);
+                        }
+
+                        .cc-img {
+                            width: 60px;
+                            height: 40px;
+                            background-repeat: no-repeat;
+                            background-size: cover;
+                            border-radius: 4px;
+                            margin-bottom: 15px
+                        }
+
+                        .cc-img-main {
+                            width: 60px;
+                            height: 40px;
+                            background-repeat: no-repeat;
+                            background-size: cover;
+                            border-radius: 4px;
+                            margin-bottom: 15px
+                        }
+
+                        .cc-num {
+                            font-family: 'Roboto', sans-serif;
+                            font-size: 15px;
+                        }
+
+                        .cc-date {
+                            margin-top: 8px;
+                            font-family: 'Roboto', sans-serif;
+                            color: #888;
+                        }
+
+                        .visa .cc-img,
+                        .visa .cc-img-main {
+                            background-image: url("http://i.imgur.com/xYX6Tsy.png")
+                        }
+
+                        .amex .cc-img,
+                        .amex .cc-img-main {
+                            background-image: url("http://i.imgur.com/47221vA.png")
+                        }
+
+                        .mc .cc-img,
+                        .mc .cc-img-main {
+                            background-image: url("http://i.imgur.com/2fWTLRZ.png")
+                        }
+
+
+
+                        .modal {
+                            text-align: center;
+                            display: none;
+                            position: fixed;
+                            top: 0;
+                            left: 0;
+                            height: 100%;
+                            width: 100%;
+                            background-color: rgba(0, 0, 0, 0.6);
+                            z-index: 1;
+                        }
+
+                        .modal-body {
+                            z-index: 2;
+                            background-color: #fff;
+                            border-radius: 5px;
+                            padding: 40px;
+                            padding-top: 10px;
+                            padding-bottom: 50px;
+                            display: inline-block;
+                            margin-top: 100px;
+                            width: 100%;
+                            max-width: 400px;
+                            position: relative;
+                        }
+
+                        .modal-close {
+                            position: absolute;
+                            top: 5px;
+                            right: 10px;
+                            font-size: 20px;
+                            cursor: pointer;
+                            font-weight: bold;
+                            color: #888;
+                        }
+
+                            .modal-close:hover {
+                                transform: scale(1.2);
+                                cursor: pointer;
+                            }
+
+                        .md-cc .cc-img {
+                            cursor: pointer;
+                        }
+
+                            .md-cc .cc-img:hover {
+                                cursor: pointer;
+                                transform: scale(1.25);
+                                transition: .1s ease-in-out;
+                            }
+
+                        .cc-md-active {
+                            transform: scale(1.25);
+                        }
+
+                        .cc-md-small {
+                            transform: scale(.80);
+                        }
+
+                        .modal-cards {
+                            width: 15%;
+                            display: inline-block;
+                            float: left;
+                        }
+
+                        .modal-add-cc {
+                            position: absolute;
+                            bottom: 15px;
+                            left: 190px;
+                            color: #fff;
+                            background-color: #0275d8;
+                            border-color: #0275d8;
+                            font-weight: 400;
+                            text-align: center;
+                            padding: .25rem 2rem;
+                            font-size: 1rem;
+                            border-radius: .25rem;
+                            -webkit-transition: all .2s ease-in-out;
+                            -o-transition: all .2s ease-in-out;
+                            transition: all .2s ease-in-out;
+                        }
+
+                        ::-webkit-scrollbar {
+                            display: none;
+                        }
+
+                        form {
+                            width: 75%;
+                            float: right;
+                        }
+
+                            form > input,
+                            form select {
+                                display: block;
+                                width: initial;
+                                border: 1px solid #e1e1e1;
+                                padding: 5px;
+                                margin: 5px
+                            }
+
+                        .modal-body > h3,
+                        .modal-body > h5 {
+                            color: #777;
+                        }
+
+                        textarea:focus,
+                        input:focus {
+                            outline: none;
+                        }
+
+                        .modal-body > h5 {
+                            border-top: 1px solid #e1e1e1;
+                            padding-top: 20px;
+                        }
+
+                        .no-trans {
+                            color: #888;
+                            text-align: center;
+                        }
+
+                        .valid-green {
+                            border: 2px solid green;
+                        }
+
+                        .valid-red {
+                            border: 2px solid darkred;
+                        }
+                    </style>
+                }
+
+
+            </div>
+
+            <div class="col-lg-4">
+                <div class="blog_right_sidebar">
+                    @{
+                        
+
+                        <aside class="single_sidebar_widget author_widget">
+                            <img style="width:100px; height: 100px" class="author_img rounded-circle" src="@Model.User.Image" alt="">
+                            <h4>@Model.User.Name</h4>
+                            <p>@Model?.User?.Department?.Name</p>
+                            <p>@Model?.User?.School?.Name</p>
+
+
+                            <div class="br"></div>
+                        </aside>
+                    }
+
+                    <aside class="single-sidebar-widget tag_cloud_widget">
+                        <h4 class="widget_title">Tag Clouds</h4>
+                        <ul class="list">
+                            <li><a href="/Profile/MyProfile?function=UpdateProfile">Change Profile</a></li>
+                            <li><a href="/Profile/MyProfile?function=ChangePassword">Change Password</a></li>
+                            <li><a href="/Profile/MyProfile?function=BecomMentor">Become a Mentor</a></li>
+                          
+                            <li><a href="#">Fashion</a></li>
+                            <li><a href="#">Food</a></li>
+                            
+                        </ul>
+                    </aside>
+                    <aside class="single_sidebar_widget post_category_widget">
+                        <h4 class="widget_title">Post Catgories</h4>
+                        <ul class="list cat-list">
+                            <li>
+                                <a href="#" class="d-flex justify-content-between">
+                                    <p>Technology</p>
+                                    <p>37</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="d-flex justify-content-between">
+                                    <p>Lifestyle</p>
+                                    <p>24</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="d-flex justify-content-between">
+                                    <p>Fashion</p>
+                                    <p>59</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="d-flex justify-content-between">
+                                    <p>Art</p>
+                                    <p>29</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="d-flex justify-content-between">
+                                    <p>Food</p>
+                                    <p>15</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="d-flex justify-content-between">
+                                    <p>Architecture</p>
+                                    <p>09</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="d-flex justify-content-between">
+                                    <p>Adventure</p>
+                                    <p>44</p>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="br"></div>
+                    </aside>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
